@@ -5,14 +5,8 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 // import SimpleUploadAdapter from "@ckeditor/ckeditor5-upload/src/adapters/simpleuploadadapter";
 
 import CKEditor from "@ckeditor/ckeditor5-react";
-console.log(ClassicEditor.builtinPlugins.map((plugin) => plugin.pluginName));
 export default class Contact extends React.Component {
-    state = {
-        username: "",
-        email: "",
-        phone: "",
-        content: "",
-    };
+    state = {};
 
     handleStateChanges = (event) => {
         const target = event.target;
@@ -41,18 +35,44 @@ export default class Contact extends React.Component {
                                         //// Here the editor is ready to be used
                                     }}
                                     onChange={(event, editor) => {
-                                        console.log(editor);
+                                        let data = editor.getData();
+                                        console.log(this.state, data);
+                                        // console.log("STATE", { data });
                                         editor.model.document.on(
-                                            "click",
-                                            (evt, data) => {
-                                                console.log(evt, data);
+                                            "change:data",
+                                            () => {
+                                                let dataMatch =
+                                                    data.match(/\<.*?\>/g);
+                                                let state = this.state.data;
+                                                console.log(state);
+                                                let stateMatch = state
+                                                    ? state.match(/\<.*?\>/g)
+                                                    : "";
+                                                if (stateMatch.length > 0) {
+                                                    let checkFilter =
+                                                        dataMatch.filter(
+                                                            (x) =>
+                                                                !stateMatch.includes(
+                                                                    x
+                                                                )
+                                                        );
+                                                    var regex =
+                                                        /<img.*?src=\"(.*?)\"/;
+                                                    const newCheck = regex.exec(
+                                                        checkFilter[0]
+                                                    );
+                                                    console.log(newCheck);
+                                                    if (newCheck) {
+                                                        const imgSrcDelete =
+                                                            newCheck[1];
+                                                        console.log(
+                                                            imgSrcDelete
+                                                        );
+                                                    }
+                                                }
                                             }
                                         );
-
-                                        // console.log(event);
-                                        const data = editor.getData();
-                                        this.setState({ content: data });
-                                        // console.log("STATE", { data });
+                                        this.setState({ data });
                                     }}
                                     config={{
                                         ckfinder: {
