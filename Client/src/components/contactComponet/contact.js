@@ -65,9 +65,7 @@ export default class Contact extends React.Component {
                                                     if (newCheck) {
                                                         const imgSrcDelete =
                                                             newCheck[1];
-                                                        console.log(
-                                                            imgSrcDelete
-                                                        );
+                                                        return localStorage.setItem('deletedImg',JSON.stringify( imgSrcDelete));
                                                     }
                                                 }
                                             }
